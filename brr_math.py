@@ -1,45 +1,30 @@
-import datetime
-import os
+from datetime import datetime
 import typing
 
 import numpy as np
 import scipy.integrate as integrate
 import scipy.optimize as optimize
-
-from data import BIG_TEN_TEAMS, B1G_2024_FOOTBALL
-
-prob_err_tracker = 0.0
+import scipy.special as special
 
 
 def calc_win_probability(
     win_team: tuple[float, float], lose_team: tuple[float, float], parity: float
 ) -> float:
-    integral = integrate.quad(
-        lambda x: np.exp(-np.square(x) / 2) / np.sqrt(2 * np.pi),
-        -np.inf,
-        (win_team[0] - lose_team[0])
-        / np.sqrt(
-            2 * np.square(parity) + np.square(win_team[1]) + np.square(lose_team[1])
-        ),
+    delta = win_team[0] - lose_team[0]
+    sigma = np.sqrt(
+        np.square(parity) + np.square(win_team[1]) + np.square(lose_team[1])
     )
-    global prob_err_tracker
-    prob_err_tracker = max(prob_err_tracker, integral[1])
-    return integral[0]
+    return special.erf(delta / (np.sqrt(2) * sigma)) / 2 + 0.5
 
 
 def calc_parity(
     season: list[tuple[str, str]], ratings: dict[str, tuple[float, float]]
 ) -> float:
     def difficulty_of_fit(y: float, parity: float, winner: str, loser: str) -> float:
-        DENOMINATOR = np.sqrt(2 * np.pi)
         sigma = np.sqrt(np.square(ratings[loser][1]) + np.square(ratings[winner][1]))
         exponent = -np.square(y - ratings[loser][0] + ratings[winner][0]) / (2 * sigma)
-        cumulative = integrate.quad(
-            lambda x: np.exp(-np.square(x) / 2) / DENOMINATOR,
-            -np.inf,
-            y / (parity * np.sqrt(2)),
-        )[0]
-        return np.exp(exponent) / sigma / DENOMINATOR * np.square(cumulative)
+        cumulative = special.erf(y / (2 * parity)) / 2 + 0.5
+        return np.exp(exponent) / sigma / np.sqrt(2 * np.pi) * np.square(cumulative)
 
     def curve(p: float) -> float:
         return sum(
@@ -52,11 +37,8 @@ def calc_parity(
             for winner, loser in season
         )
 
-    result = optimize.minimize_scalar(curve, (0.05, 50))
-    # Bracket found using calc_parity([('B', 'A')], {'A': (0, 1), 'B': (0, 1)})
-    # Lower chosen with low value that still yields accurate (big) result
-    # Without bracket, the value is between 1e9 and 1e10
-    # Really, any parity over 50 is useless; this could be brought down
+    result = optimize.minimize_scalar(curve, (0.5, 5))
+    # Bracket found using calc_parity([('B', 'A')], {'A': (0, 1), 'B': (0, 1)}) was (.05, 1e10)
     print(result)
     return result.x
 
@@ -130,7 +112,8 @@ def iter_ratings(
 ):
     if ratings is None:
         ratings = {team: (0, 1) for game in season for team in game}
-    with open(f"run_{datetime.datetime.now().isoformat()}.py", "w") as f:
+    with open(f"run_{datetime.now().isoformat()}.py", "w") as f:
+        f.write("import numpy as np; iterations = []; ")
         iteration_done = 0
         while (
             not iteration_done
@@ -147,11 +130,6 @@ def iter_ratings(
             ratings = next_ratings(season, parity, ratings)
             parity = calc_parity(season, ratings)
             iteration_done += 1
-            f.write(
-                f"iteration{str(iteration_done)} = {repr((season, ratings, parity))}\n"
-            )
+            f.write(f"iterations.append({repr((season, ratings, parity))})\n")
             f.flush()
     return ratings, parity, abs(parity - prev_parity)
-
-
-iter_ratings(B1G_2024_FOOTBALL, 0, np.float64(1.1352629751334307), {'Michigan State': (-0.446612402986514, np.float64(0.6299927515437171)), 'Maryland': (-1.145752407337535, np.float64(0.6560008000574526)), 'Indiana': (1.0486045161890327, np.float64(0.6663171269574972)), 'UCLA': (-0.3024910390763602, np.float64(0.6175605633998039)), 'Illinois': (0.5333498057597115, np.float64(0.6352441927480652)), 'Nebraska': (-0.5692673780887006, np.float64(0.6197395119129336)), 'Michigan': (0.3398603488036836, np.float64(0.6094885577217435)), 'USC': (-0.2566979098331808, np.float64(0.602197031510324)), 'Washington': (0.014896931866371083, np.float64(0.6150295122638711)), 'Northwestern': (-0.9510799312136184, np.float64(0.6441960230806807)), 'Iowa': (0.2915162374777082, np.float64(0.6074020811127141)), 'Minnesota': (0.17221361055241285, np.float64(0.6059659583987067)), 'Rutgers': (-0.3486533757724495, np.float64(0.5895486017493541)), 'Purdue': (-1.6106565483431774, np.float64(0.7045829292687711)), 'Wisconsin': (-0.5758237941606764, np.float64(0.6280676128026477)), 'Ohio State': (0.6541515171169094, np.float64(0.631618504783186)), 'Penn State': (1.587488098951568, np.float64(0.700217552846073)), 'Oregon': (1.5891412586153664, np.float64(0.7006615939895392))})
