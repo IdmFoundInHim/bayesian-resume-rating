@@ -1,4 +1,3 @@
-from datetime import datetime
 import typing
 
 import numpy as np
@@ -58,6 +57,7 @@ def next_ratings(
     season: list[tuple[str, str]],
     parity: float,
     current_ratings: dict[str, tuple[float, float]],
+    teams: list[str] | None = None,
 ) -> dict[str, tuple[float, float]]:
     def season_probability(team: str, rating: float) -> float:
         games = []
@@ -71,8 +71,8 @@ def next_ratings(
             games.append(calc_win_probability(winner, loser, parity))
         return typing.cast(float, np.prod(games))
 
-    out = {}
-    for team in current_ratings:
+    ratings = current_ratings.copy()
+    for team in teams or current_ratings:
         numerator = integrate.quad(
             lambda x: x
             * np.exp(-np.square(x) / 2)
@@ -97,11 +97,11 @@ def next_ratings(
             -np.inf,
             np.inf,
         )
-        out[team] = (rating, np.sqrt(variance_numerator[0] / denominator[0]))
+        ratings[team] = (rating, np.sqrt(variance_numerator[0] / denominator[0]))
         print(
-            f"{team}: {tuple(map(lambda x: float(typing.cast(np.float64, x)), out[team]))}"
+            f"{team}: {tuple(map(lambda x: float(typing.cast(np.float64, x)), ratings[team]))}"
         )
-    return out
+    return ratings
 
 
 def iter_ratings(
@@ -109,15 +109,17 @@ def iter_ratings(
     convergence: float = 1e-3,
     parity: float = 1.0,
     ratings: dict[str, tuple[float, float]] | None = None,
-):
+    teams: list[str] | None = None,
+) -> tuple[float, float, dict[str, tuple[float, float]]]:
     if ratings is None:
-        ratings = {team: (0, 1) for game in season for team in game}
-    with open(f"run_{datetime.now().isoformat()}.py", "w") as f:
-        f.write("import numpy as np; iterations = []; ")
-        iteration_done = 0
-        while (
-            not iteration_done
-            or any(
+        ratings = {team: (0.0, 1.0) for game in season for team in game}
+    while True:
+        prev_ratings = ratings
+        prev_parity = parity
+        ratings = next_ratings(season, parity, ratings, teams)
+        parity = calc_parity(season, ratings)
+        if (
+            any(
                 map(
                     lambda t: abs(ratings[t][0] - prev_ratings[t][0]) > convergence,
                     ratings,
@@ -125,11 +127,4 @@ def iter_ratings(
             )
             or abs(parity - prev_parity) > convergence
         ):
-            prev_ratings = ratings
-            prev_parity = parity
-            ratings = next_ratings(season, parity, ratings)
-            parity = calc_parity(season, ratings)
-            iteration_done += 1
-            f.write(f"iterations.append({repr((season, ratings, parity))})\n")
-            f.flush()
-    return ratings, parity, abs(parity - prev_parity)
+            return convergence, parity, ratings

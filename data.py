@@ -1,10 +1,10 @@
 from collections.abc import Callable
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import csv
 
-Row = tuple[int, bool, datetime, str, str, str, str, str, str]
-Key = Callable[[int, bool, datetime, str, str, str, str, str, str], Row]
+type Row = tuple[int, bool, datetime, str, str, str, str, str, str]
+type Key = Callable[[int, bool, datetime, str, str, str, str, str, str], Row]
 
 
 def csv2list(key: Key) -> Callable[[str], list[tuple[str, str]]]:
@@ -174,6 +174,12 @@ def add_conference_filter(
     return decorator
 
 
+def previous_monday(dt: datetime) -> datetime:
+    dt = dt - timedelta(hours=5)
+    dt = dt - timedelta(days=dt.weekday())
+    return dt.replace(hour=5, minute=0, second=0, microsecond=0)
+
+
 def add_week_filter(
     last_week: int, csv_file: str | None = None
 ) -> Callable[[Key], Key]:
@@ -183,7 +189,7 @@ def add_week_filter(
             reader = csv.reader(file)
             next(reader)
             reg_season_end_week = 0
-            reg_season_end_date = datetime.max
+            reg_season_end_date = datetime.max.replace(tzinfo=timezone.utc)
             for row in reader:
                 if row[1] == "postseason":
                     reg_season_end_date = min(
@@ -191,6 +197,7 @@ def add_week_filter(
                     )
                 else:
                     reg_season_end_week = max(int(row[0]), reg_season_end_week)
+            reg_season_end_date = previous_monday(reg_season_end_date)
         if last_week > reg_season_end_week:
             include_postseason = True
 
