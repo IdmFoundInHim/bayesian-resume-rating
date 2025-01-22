@@ -2,6 +2,8 @@ from statistics import mean
 
 from ratings import int_input, fbs_with_fcs
 
+CONVERGENCE_DIGITS = 4
+_CONVERGENCE = 10.0**-CONVERGENCE_DIGITS
 LAST_UPDATED = 2025  # One year added
 CONFERENCES = {  # dict[conference, dict[team, (year_joined, year_left)]]
     "ACC": {
@@ -219,7 +221,8 @@ if __name__ == "__main__":
     year = int_input("Year: ", 2023)
     week = int_input("Week: ", 17)  # 2023 had 17 weeks
     team_ratings = {
-        k[:40].strip(): v[0] for k, v in fbs_with_fcs(year, week, 1e-5)[2].items()
+        k[:40].strip(): v[0]
+        for k, v in fbs_with_fcs(year, week, _CONVERGENCE)[2].items()
     }
     year = min(year, LAST_UPDATED)
     current_conference_members = {
@@ -241,7 +244,7 @@ if __name__ == "__main__":
     unofficial = False
     for conference in sorted(average_ratings, key=average_ratings.get, reverse=True):
         print(
-            f"{conference}{((unofficial := True) and '*') if 8 > len(current_conference_members[conference]) else ''}: {average_ratings[conference]:.6f}"
+            f"{conference}{((unofficial := True) and '*') if 8 > len(current_conference_members[conference]) else ''}: {average_ratings[conference]:.{CONVERGENCE_DIGITS}f}"
         )
     if unofficial:
         print("\n*Conference did not meet FBS 8-team minimum")

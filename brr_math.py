@@ -119,9 +119,9 @@ def iter_ratings(
         ratings = next_ratings(season, parity, ratings, teams)
         parity = calc_parity(season, ratings)
         if (
-            any(
+            all(
                 map(
-                    lambda t: abs(ratings[t][0] - prev_ratings[t][0]) > convergence,
+                    lambda t: abs(ratings[t][0] - prev_ratings[t][0]) < convergence,
                     ratings,
                 )
             )

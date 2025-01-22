@@ -213,7 +213,7 @@ def add_week_filter(
             _7: str,
             _8: str,
         ) -> Row:
-            if include_postseason and not before_playoffs:
+            if not before_playoffs:
                 week = (start_time - reg_season_end_date) / timedelta(
                     weeks=1
                 ) + reg_season_end_week

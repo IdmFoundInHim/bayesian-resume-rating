@@ -3797,5 +3797,6 @@
 "1","postseason","2025-01-04T16:00:00.000Z","true","2335","Liberty","Conference USA","fbs","7","2084","Buffalo","Mid-American","fbs","26"
 "1","postseason","2025-01-06T01:00:00.000Z","true","3071","North Central College","CCIW","iii","41","426","University of Mount Union","Ohio","iii","25"
 "1","postseason","2025-01-07T00:00:00.000Z","true","147","Montana State","Big Sky","fcs","32","2449","North Dakota State","MVFC","fcs","35"
-"1","postseason","2025-01-10T00:30:00.000Z","false","213","Penn State","Big Ten","fbs","","87","Notre Dame","FBS Independents","fbs",""
-"1","postseason","2025-01-11T00:30:00.000Z","false","251","Texas","SEC","fbs","","194","Ohio State","Big Ten","fbs",""
+"1","postseason","2025-01-10T00:30:00.000Z","true","213","Penn State","Big Ten","fbs","24","87","Notre Dame","FBS Independents","fbs","27"
+"1","postseason","2025-01-11T00:30:00.000Z","true","251","Texas","SEC","fbs","14","194","Ohio State","Big Ten","fbs","28"
+"1","postseason","2025-01-21T00:30:00.000Z","true","87","Notre Dame","FBS Independents","fbs","23","194","Ohio State","Big Ten","fbs","34"
