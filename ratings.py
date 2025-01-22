@@ -3,7 +3,7 @@ from collections.abc import Callable
 from typing import TypeVar
 
 from brr_math import iter_ratings, calc_parity
-from data import csv2list, add_division_filter, add_week_filter
+from data import csv2list, add_division_filter, add_week_filter, TEAM_NAME_LENGTH
 
 CONVERGENCE_DIGITS = 6
 _CONVERGENCE = 10.0**-CONVERGENCE_DIGITS
@@ -110,12 +110,26 @@ def fbs_with_fcs(year_selected: int, week_selected: int, convergence: float = 1e
     )
 
 
-if __name__ == "__main__":
-    year = int_input("Year: ", 2023)
-    week = int_input("Week: ", 17)
+def print_ratings(ratings: dict[str, tuple[float, float]]):
     for k, v in sorted(
-        fbs_with_fcs(year, week, _CONVERGENCE)[2].items(),
+        ratings.items(),
         key=lambda x: x[1][0],
         reverse=True,
     ):
         print(f"{k}: {v[0]:.{CONVERGENCE_DIGITS}f},  σ = {v[1]:.2f}")
+
+
+def get_fbs_ratings(year: int, week: int) -> dict[str, tuple[float, float]]:
+    with open("RatingsCache.json", "r") as cache_file:
+        cache = json.load(cache_file)
+        if (cache_key := f"{year}w{week:02}fbs") in cache:
+            out = cache[cache_key][2]
+        else:
+            out = fbs_with_fcs(year, week, _CONVERGENCE)[2]
+    return {k[:TEAM_NAME_LENGTH].strip(): v for k, v in out.items()}
+
+
+if __name__ == "__main__":
+    year = int_input("Year: ", 2024)
+    week = int_input("Week: ", 21)
+    print_ratings(get_fbs_ratings(year, week))

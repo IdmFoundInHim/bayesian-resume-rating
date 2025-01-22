@@ -125,6 +125,6 @@ def iter_ratings(
                     ratings,
                 )
             )
-            or abs(parity - prev_parity) > convergence
+            and abs(parity - prev_parity) < convergence
         ):
             return convergence, parity, ratings

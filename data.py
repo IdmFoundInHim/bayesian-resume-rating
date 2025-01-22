@@ -3,6 +3,9 @@ from datetime import datetime, timedelta, timezone
 
 import csv
 
+
+TEAM_NAME_LENGTH = 40
+TEAM_ID_LENGTH = 10
 type Row = tuple[int, bool, datetime, str, str, str, str, str, str]
 type Key = Callable[[int, bool, datetime, str, str, str, str, str, str], Row]
 
@@ -32,17 +35,17 @@ def csv2list(key: Key) -> Callable[[str], list[tuple[str, str]]]:
                 if game_completed.lower() == "true":
                     home = str(home_id)
                     home = (
-                        home_team[:40]
-                        + " " * (40 - len(home_team))
-                        + home[:10]
-                        + " " * (10 - len(home))
+                        home_team[:TEAM_NAME_LENGTH]
+                        + " " * (TEAM_NAME_LENGTH - len(home_team))
+                        + home[:TEAM_ID_LENGTH]
+                        + " " * (TEAM_ID_LENGTH - len(home))
                     )
                     away = str(away_id)
                     away = (
-                        away_team[:40]
-                        + " " * (40 - len(away_team))
-                        + away[:10]
-                        + " " * (10 - len(away))
+                        away_team[:TEAM_NAME_LENGTH]
+                        + " " * (TEAM_NAME_LENGTH - len(away_team))
+                        + away[:TEAM_ID_LENGTH]
+                        + " " * (TEAM_ID_LENGTH - len(away))
                     )
                     _, _, _, home, _, _, away, _, _ = key(
                         int(week),
@@ -91,7 +94,7 @@ def add_division_filter(
                 elif squash_others:
                     home = (
                         home_division.upper()
-                        + " " * (40 - len(home_division))
+                        + " " * (TEAM_NAME_LENGTH - len(home_division))
                         + "0         "
                     )
                 home_conference = home_division.upper()
@@ -101,7 +104,7 @@ def add_division_filter(
                 elif squash_others:
                     away = (
                         away_division.upper()
-                        + " " * (40 - len(away_division))
+                        + " " * (TEAM_NAME_LENGTH - len(away_division))
                         + "0         "
                     )
                 away_conference = away_division.upper()
@@ -143,7 +146,7 @@ def add_conference_filter(
                 elif squash_others:
                     home = (
                         home_conference.upper()
-                        + " " * (40 - len(home_conference))
+                        + " " * (TEAM_NAME_LENGTH - len(home_conference))
                         + "0         "
                     )
                 home_division = home_conference.upper()
@@ -153,7 +156,7 @@ def add_conference_filter(
                 elif squash_others:
                     away = (
                         away_conference.upper()
-                        + " " * (40 - len(away_conference))
+                        + " " * (TEAM_NAME_LENGTH - len(away_conference))
                         + "0         "
                     )
                 away_division = away_conference.upper()

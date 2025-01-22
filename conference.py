@@ -1,6 +1,6 @@
 from statistics import mean
 
-from ratings import int_input, fbs_with_fcs
+from ratings import int_input, get_fbs_ratings
 
 CONVERGENCE_DIGITS = 4
 _CONVERGENCE = 10.0**-CONVERGENCE_DIGITS
@@ -218,12 +218,9 @@ CONFERENCES = {  # dict[conference, dict[team, (year_joined, year_left)]]
 }
 
 if __name__ == "__main__":
-    year = int_input("Year: ", 2023)
-    week = int_input("Week: ", 17)  # 2023 had 17 weeks
-    team_ratings = {
-        k[:40].strip(): v[0]
-        for k, v in fbs_with_fcs(year, week, _CONVERGENCE)[2].items()
-    }
+    year = int_input("Year: ", 2024)
+    week = int_input("Week: ", 21)  # 2024 had 21 weeks, 2023 had 17 weeks
+    team_ratings = get_fbs_ratings(year, week)
     year = min(year, LAST_UPDATED)
     current_conference_members = {
         conference: [
@@ -235,7 +232,7 @@ if __name__ == "__main__":
     }
     average_ratings = {
         conference: mean(
-            team_ratings[team]
+            team_ratings[team][0]
             for team in current_conference_members[conference]
             if team in team_ratings
         )
