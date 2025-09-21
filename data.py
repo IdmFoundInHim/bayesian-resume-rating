@@ -23,13 +23,13 @@ def csv2list(key: Key) -> Callable[[str], list[tuple[str, str]]]:
                 game_completed,
                 home_id,
                 home_team,
-                home_conference,
                 home_division,
+                home_conference,
                 home_points,
                 away_id,
                 away_team,
-                away_conference,
                 away_division,
+                away_conference,
                 away_points,
             ) in reader:
                 if game_completed.lower() == "true":
