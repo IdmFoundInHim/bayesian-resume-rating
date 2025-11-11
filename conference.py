@@ -238,7 +238,7 @@ if __name__ == "__main__":
             for team in current_conference_members[conference]
             if team in team_ratings
         )
-        for conference in current_conference_members
+        for conference in current_conference_members if len(current_conference_members[conference])
     }
     unofficial = False
     for conference in sorted(average_ratings, key=average_ratings.get, reverse=True):
