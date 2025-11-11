@@ -4,7 +4,7 @@ from ratings import int_input, get_fbs_ratings
 
 CONVERGENCE_DIGITS = 4
 _CONVERGENCE = 10.0**-CONVERGENCE_DIGITS
-LAST_UPDATED = 2024
+LAST_UPDATED = 2025
 LAST_UPDATED += 1 # switches range end to inclusive
 CONFERENCES = {  # dict[conference, dict[team, (year_joined, year_left)]]
     "ACC": {
