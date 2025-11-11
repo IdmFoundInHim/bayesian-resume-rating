@@ -4,7 +4,8 @@ from ratings import int_input, get_fbs_ratings
 
 CONVERGENCE_DIGITS = 4
 _CONVERGENCE = 10.0**-CONVERGENCE_DIGITS
-LAST_UPDATED = 2025  # One year added
+LAST_UPDATED = 2024
+LAST_UPDATED += 1 # switches range end to inclusive
 CONFERENCES = {  # dict[conference, dict[team, (year_joined, year_left)]]
     "ACC": {
         "Boston College": range(2005, LAST_UPDATED),
@@ -223,7 +224,7 @@ if __name__ == "__main__":
     year = int_input("Year: ", 2024)
     week = int_input("Week: ", 21)  # 2024 had 21 weeks, 2023 had 17 weeks
     team_ratings = get_fbs_ratings(year, week)
-    year = min(year, LAST_UPDATED)
+    year = min(year, LAST_UPDATED - 1)
     current_conference_members = {
         conference: [
             team
