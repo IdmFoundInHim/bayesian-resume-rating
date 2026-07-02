@@ -4,7 +4,7 @@ from ratings import int_input, get_fbs_ratings
 
 CONVERGENCE_DIGITS = 4
 _CONVERGENCE = 10.0**-CONVERGENCE_DIGITS
-LAST_UPDATED = 2025
+LAST_UPDATED = 2026
 LAST_UPDATED += 1 # switches range end to inclusive
 CONFERENCES = {  # dict[conference, dict[team, (year_joined, year_left)]]
     "ACC": {
@@ -136,7 +136,7 @@ CONFERENCES = {  # dict[conference, dict[team, (year_joined, year_left)]]
         "Jacksonville State": range(2023, LAST_UPDATED),
         "Kennesaw State": range(2024, LAST_UPDATED),
         "Liberty": range(2023, LAST_UPDATED),
-        "Louisiana Tech": range(2013, 2027),
+        "Louisiana Tech": range(2013, 2026),
         "Louisville": range(1996, 2005),
         "Marshall": range(2005, 2022),
         "Memphis": range(1996, 2013),
@@ -155,7 +155,7 @@ CONFERENCES = {  # dict[conference, dict[team, (year_joined, year_left)]]
         "UAB": list(range(1995, 2015)) + list(range(2017, 2023)),
         "UCF": range(2005, 2013),
         "South Florida": range(2003, 2005),
-        "UTEP": range(2005, LAST_UPDATED),
+        "UTEP": range(2005, 2026),
         "UTSA": range(2013, 2023),
         "Western Kentucky": range(2014, LAST_UPDATED),
     },
@@ -172,6 +172,7 @@ CONFERENCES = {  # dict[conference, dict[team, (year_joined, year_left)]]
         "Miami (OH)": range(1947, LAST_UPDATED),
         "Northern Illinois": range(1997, 2026),
         "Ohio": range(1946, LAST_UPDATED),
+        "Sacramento State": range(2026, LAST_UPDATED),
         "Temple": range(2007, 2012),
         "Toledo": range(1950, LAST_UPDATED),
         "UCF": range(2002, 2005),
@@ -186,6 +187,7 @@ CONFERENCES = {  # dict[conference, dict[team, (year_joined, year_left)]]
         "Hawai'i": range(2012, LAST_UPDATED),
         "Nevada": range(2012, LAST_UPDATED),
         "New Mexico": range(1999, LAST_UPDATED),
+        "North Dakota State": range(2026, LAST_UPDATED),
         "Northern Illinois": range(2026, LAST_UPDATED),
         "San Diego State": range(1999, 2026),
         "San José State": range(2013, LAST_UPDATED),
@@ -193,6 +195,7 @@ CONFERENCES = {  # dict[conference, dict[team, (year_joined, year_left)]]
         "UNLV": range(1999, LAST_UPDATED),
         "Utah": range(1999, 2011),
         "Utah State": range(2013, 2026),
+        "UTEP": range(2026, LAST_UPDATED),
         "Wyoming": range(1999, LAST_UPDATED),
     },
     "Sun Belt": {
@@ -205,7 +208,7 @@ CONFERENCES = {  # dict[conference, dict[team, (year_joined, year_left)]]
         "Georgia State": range(2013, LAST_UPDATED),
         "James Madison": range(2022, LAST_UPDATED),
         "Louisiana": range(2001, LAST_UPDATED),
-        "Louisiana Tech": range(2027, LAST_UPDATED),
+        "Louisiana Tech": range(2026, LAST_UPDATED),
         "UL Monroe": range(2001, LAST_UPDATED),
         "Marshall": range(2022, LAST_UPDATED),
         "MTSU": range(2001, 2013),
