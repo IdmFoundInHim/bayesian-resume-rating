@@ -6,7 +6,7 @@ from ratings import get_fbs_ratings
 CONVERGENCE_DIGITS = 4
 _CONVERGENCE = 10.0**-CONVERGENCE_DIGITS
 LAST_UPDATED = 2026
-LAST_UPDATED += 1 # switches range end to inclusive
+LAST_UPDATED += 1  # switches range end to inclusive
 CONFERENCES = {  # dict[conference, dict[team, (year_joined, year_left)]]
     "ACC": {
         "Boston College": range(2005, LAST_UPDATED),
@@ -243,7 +243,8 @@ if __name__ == "__main__":
             for team in current_conference_members[conference]
             if team in team_ratings
         )
-        for conference in current_conference_members if len(current_conference_members[conference])
+        for conference in current_conference_members
+        if len(current_conference_members[conference])
     }
     unofficial = False
     for conference in sorted(average_ratings, key=average_ratings.get, reverse=True):

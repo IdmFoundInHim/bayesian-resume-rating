@@ -94,7 +94,7 @@ def fbs_with_fcs(year_selected: int, week_selected: int, convergence: float = 1e
     try:
         mu, sigma = squashed.pop("FCS                                     0         ")
     except KeyError:
-        return fbs_full(file, tag + 'fbs', convergence=convergence, ratings=squashed)
+        return fbs_full(file, tag + "fbs", convergence=convergence, ratings=squashed)
     fcs_in_fbs = {
         k: (v[0] * sigma + mu, v[1] * sigma + sigma)
         for k, v in fcs_squashed(file, tag + "fcsq", convergence=convergence)[2].items()

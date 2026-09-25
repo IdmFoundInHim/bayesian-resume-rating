@@ -3,7 +3,6 @@ from datetime import datetime, timedelta, timezone
 
 import csv
 
-
 TEAM_NAME_LENGTH = 40
 TEAM_ID_LENGTH = 10
 type Row = tuple[int, bool, datetime, str, str, str, str, str, str]
