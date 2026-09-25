@@ -4,8 +4,7 @@ import sys
 from custom_io import int_input
 from ratings import get_fbs_ratings
 
-CONVERGENCE_DIGITS = 4
-_CONVERGENCE = 10.0**-CONVERGENCE_DIGITS
+SHOW_DIGITS = 4
 LAST_UPDATED = 2026
 LAST_UPDATED += 1  # switches range end to inclusive
 CONFERENCES = {  # dict[conference, dict[team, (year_joined, year_left)]]
@@ -252,7 +251,7 @@ if __name__ == "__main__":
     unofficial = False
     for conference in sorted(average_ratings, key=average_ratings.get, reverse=True):
         print(
-            f"{conference}{((unofficial := True) and '*') if 8 > len(current_conference_members[conference]) else ''}: {average_ratings[conference]:.{CONVERGENCE_DIGITS}f}"
+            f"{conference}{((unofficial := True) and '*') if 8 > len(current_conference_members[conference]) else ''}: {average_ratings[conference]:.{SHOW_DIGITS}f}"
         )
     if unofficial:
         print("\n*Conference did not meet FBS 8-team minimum")

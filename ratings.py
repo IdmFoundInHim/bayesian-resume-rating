@@ -6,7 +6,6 @@ from brr_math import iter_ratings, calc_parity
 from custom_io import int_input
 from data import csv2list, add_division_filter, add_week_filter, TEAM_NAME_LENGTH
 
-
 CONVERGENCE_DIGITS = 6
 _CONVERGENCE = 10.0**-CONVERGENCE_DIGITS
 
@@ -122,9 +121,13 @@ def print_ratings(ratings: dict[str, tuple[float, float]]):
 def get_fbs_ratings(year: int, week: int) -> dict[str, tuple[float, float]]:
     with open("RatingsCache.json", "r") as cache_file:
         cache = json.load(cache_file)
-        if (cache_key := f"{year}w{week:02}fbs") in cache:
-            out = cache[cache_key][2]
-        else:
+        try:
+            convergence, _, out = cache[f"{year}w{week:02}fbs"]
+            if convergence > _CONVERGENCE and input(
+                f"Convergence for cached ratings is {convergence}. Recalculate with {_CONVERGENCE} [y/N]? "
+            ).lower().startswith("y"):
+                raise KeyError
+        except KeyError:
             out = fbs_with_fcs(year, week, _CONVERGENCE)[2]
     return {k[:TEAM_NAME_LENGTH].strip(): v for k, v in out.items()}
 
