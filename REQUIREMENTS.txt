@@ -1,0 +1,6 @@
+black
+
+numpy
+scipy ~=1.0
+cfbd  >=5.25
+python-dotenv
