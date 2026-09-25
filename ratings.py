@@ -3,8 +3,9 @@ from collections.abc import Callable
 from typing import TypeVar
 
 from brr_math import iter_ratings, calc_parity
+from custom_io import int_input
 from data import csv2list, add_division_filter, add_week_filter, TEAM_NAME_LENGTH
-from io import int_input
+
 
 CONVERGENCE_DIGITS = 6
 _CONVERGENCE = 10.0**-CONVERGENCE_DIGITS

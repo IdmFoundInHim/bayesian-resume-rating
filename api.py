@@ -6,7 +6,7 @@ from aenum import Enum
 import cfbd
 from dotenv import load_dotenv
 
-from io import int_input
+from custom_io import int_input
 
 load_dotenv()
 

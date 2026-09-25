@@ -1,6 +1,7 @@
 from statistics import mean
+import sys
 
-from io import int_input
+from custom_io import int_input
 from ratings import get_fbs_ratings
 
 CONVERGENCE_DIGITS = 4
@@ -228,7 +229,9 @@ if __name__ == "__main__":
     year = int_input("Year: ", 2024)
     week = int_input("Week: ", 21)  # 2024 had 21 weeks, 2023 had 17 weeks
     team_ratings = get_fbs_ratings(year, week)
-    year = min(year, LAST_UPDATED - 1)
+    if year >= LAST_UPDATED:
+        year = LAST_UPDATED - 1
+        print("Warning: conference affiliations may be out of date", file=sys.stderr)
     current_conference_members = {
         conference: [
             team
