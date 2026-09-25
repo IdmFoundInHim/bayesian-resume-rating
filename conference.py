@@ -1,6 +1,7 @@
 from statistics import mean
 
-from ratings import int_input, get_fbs_ratings
+from io import int_input
+from ratings import get_fbs_ratings
 
 CONVERGENCE_DIGITS = 4
 _CONVERGENCE = 10.0**-CONVERGENCE_DIGITS

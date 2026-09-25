@@ -4,14 +4,10 @@ from typing import TypeVar
 
 from brr_math import iter_ratings, calc_parity
 from data import csv2list, add_division_filter, add_week_filter, TEAM_NAME_LENGTH
+from io import int_input
 
 CONVERGENCE_DIGITS = 6
 _CONVERGENCE = 10.0**-CONVERGENCE_DIGITS
-
-
-def int_input(prompt: str, default: int) -> int:
-    i = input(prompt)
-    return int(i) if i.isdigit() else default
 
 
 T = TypeVar("T", bound=Callable)
